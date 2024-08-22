@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'edit_profile.dart';
@@ -38,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-ir
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

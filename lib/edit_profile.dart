@@ -15,10 +15,13 @@ class _EditProfileState extends State<EditProfile> {
 
   var firstnameText = TextEditingController();
   var lastnameText = TextEditingController();
-  var genderText = TextEditingController();
+  var genderText = "";
   var bloodgroupText = TextEditingController();
   var emailText = TextEditingController();
-
+  var genderlist = [
+    'Male',
+    'Female'
+  ];
   @override
   void initState() {
     super.initState();
@@ -30,7 +33,7 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       firstnameText.text = prefs.getString('fname') ?? '';
       lastnameText.text = prefs.getString('lname') ?? '';
-      genderText.text = prefs.getString('gender') ?? '';
+      genderText = prefs.getString('gender') ?? '';
       bloodgroupText.text = prefs.getString('blood') ?? '';
       emailText.text = prefs.getString('email') ?? '';
       String? imagePath = prefs.getString('imagePath');
@@ -53,7 +56,7 @@ class _EditProfileState extends State<EditProfile> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('fname', firstnameText.text);
     prefs.setString('lname', lastnameText.text);
-    prefs.setString('gender', genderText.text);
+    prefs.setString('gender', genderText);
     prefs.setString('blood', bloodgroupText.text);
     prefs.setString('email', emailText.text);
     if (_imagefile != null) {
@@ -131,12 +134,38 @@ class _EditProfileState extends State<EditProfile> {
               ),
               SizedBox(height: 20,),
               TextField(
-                controller: genderText,
+                controller: TextEditingController(text: genderText),
+                readOnly: true,
                 decoration: InputDecoration(
-                  hintText: "Your Gender",
-                  labelText: "Gender",
-                  border: OutlineInputBorder(),
+                  hintText: "Select Gender",
+                  suffixIcon: Icon(Icons.keyboard_arrow_down),
                 ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: DropdownButton<String>(
+                          isExpanded: true,
+                          value: genderText.isEmpty ? null : genderText,
+                          hint: Text("Select Gender"),
+                          items: genderlist.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              genderText = newValue!;
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               SizedBox(height: 20,),
               TextField(
