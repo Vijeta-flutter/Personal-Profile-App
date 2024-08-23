@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   var firstname = "";
   var lastname = "";
   var gender = "";
-  var bloodgroup = "";
+  var dob = "";
   var email = "";
 
   @override
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       firstname = prefs.getString('fname') ?? '';
       lastname = prefs.getString('lname') ?? '';
       gender = prefs.getString('gender') ?? '';
-      bloodgroup = prefs.getString('blood') ?? '';
+      dob = prefs.getString('dob') ?? '';
       email = prefs.getString('email') ?? '';
       String? imagePath = prefs.getString('imagePath');
       if (imagePath != null ) {
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
               fontWeight: FontWeight.bold
           ),
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.cyan,
         centerTitle: true,
       ),
       body: ListView(
@@ -61,98 +61,161 @@ class _HomePageState extends State<HomePage> {
                   : AssetImage('assets/new.png') as ImageProvider,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'First Name',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(firstname,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width,height: 34,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black12),
+                  color: Colors.black12
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(firstname,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 10),
               Text(
                 'Last Name',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
-                lastname,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width,height: 34,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    color: Colors.black12
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    lastname,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 10),
               Text(
                 'Gender',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
-                gender,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width,height: 34,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    color: Colors.black12
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    gender,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 10,),
               Text(
-                'Blood Group',
+                'Date of Birth',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8,),
-              Text(
-                bloodgroup,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+              SizedBox(height: 10,),
+              Container(
+                width: MediaQuery.of(context).size.width,height: 34,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    color: Colors.black12
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    dob,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 10,),
               Text(
                 'Email address',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8,),
-              Text(
-                email,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+              SizedBox(height: 10,),
+              Container(
+                width: MediaQuery.of(context).size.width,height: 34,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    color: Colors.black12
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    email,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                    MaterialPageRoute(builder:(context) =>
-                        EditProfile()),).then((_){
-                          getValues();
-                  }
-                  );
-                },
-                child: Text('Edit Profile'),
+              SizedBox(height: 40,),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      minimumSize: Size(MediaQuery.of(context).size.width, 60)
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder:(context) =>
+                          EditProfile()),).then((_){
+                            getValues();
+                    }
+                    );
+                  },
+                  child: Text('Edit Profile',
+                  style: TextStyle(
+                    color: Colors.white,
+                      fontSize: 20),
+                ),
+                ),
               ),
             ],
           ),

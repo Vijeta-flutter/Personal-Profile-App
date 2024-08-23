@@ -3,6 +3,8 @@ import 'package:first/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:intl/intl.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -16,12 +18,10 @@ class _EditProfileState extends State<EditProfile> {
   var firstnameText = TextEditingController();
   var lastnameText = TextEditingController();
   var genderText = "";
-  var bloodgroupText = TextEditingController();
+  var dobText = TextEditingController();
   var emailText = TextEditingController();
-  var genderlist = [
-    'Male',
-    'Female'
-  ];
+  var genderlist = ['Male','Female'];
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
       firstnameText.text = prefs.getString('fname') ?? '';
       lastnameText.text = prefs.getString('lname') ?? '';
       genderText = prefs.getString('gender') ?? '';
-      bloodgroupText.text = prefs.getString('blood') ?? '';
+      dobText.text = prefs.getString('dob') ?? '';
       emailText.text = prefs.getString('email') ?? '';
       String? imagePath = prefs.getString('imagePath');
       if (imagePath != null && imagePath.isNotEmpty) {
@@ -57,7 +57,7 @@ class _EditProfileState extends State<EditProfile> {
     prefs.setString('fname', firstnameText.text);
     prefs.setString('lname', lastnameText.text);
     prefs.setString('gender', genderText);
-    prefs.setString('blood', bloodgroupText.text);
+    prefs.setString('dob', dobText.text);
     prefs.setString('email', emailText.text);
     if (_imagefile != null) {
       await prefs.setString('imagePath', _imagefile!.path);
@@ -66,8 +66,19 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
   void saveChanges() async{
+    print("Save Changes button pressed");
     await setData();
+    print("Data saved successfully");
     Navigator.pop(context);
+  }
+
+  Future<DateTime?> selectDate(BuildContext context) async{
+    return await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+    );
   }
 
   @override
@@ -75,11 +86,12 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile Page'),
+        backgroundColor: Colors.cyanAccent,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -88,7 +100,6 @@ class _EditProfileState extends State<EditProfile> {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) => Container(
-                      height: 120,
                       child: Column(
                         children: [
                           ListTile(
@@ -99,6 +110,14 @@ class _EditProfileState extends State<EditProfile> {
                               Navigator.pop(context);
                             },
                           ),
+                          ListTile(
+                            leading: Icon(Icons.photo_library),
+                            title: Text("Choose from gallery"),
+                            onTap: () {
+                              pickImage(ImageSource.gallery);
+                              Navigator.pop(context);
+                            },
+                          )
                         ],
                       ),
                     ),
@@ -115,29 +134,57 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               SizedBox(height: 20),
-              TextField(
-                controller: firstnameText,
-                decoration: InputDecoration(
-                  hintText: "Your First Name",
-                  labelText: "First Name",
-                  border: OutlineInputBorder(),
+              Container(
+                child: TextField(
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                  controller: firstnameText,
+                  decoration: InputDecoration(
+                    hintText: "Your First Name",
+                    labelText: 'First Name',
+                    floatingLabelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               TextField(
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
                 controller: lastnameText,
                 decoration: InputDecoration(
                   hintText: "Your Last Name",
                   labelText: "Last Name",
+                  floatingLabelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               TextField(
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
                 controller: TextEditingController(text: genderText),
                 readOnly: true,
                 decoration: InputDecoration(
                   hintText: "Select Gender",
+                  labelText: "Gender",
+                  floatingLabelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.keyboard_arrow_down),
                 ),
                 onTap: () {
@@ -167,36 +214,64 @@ class _EditProfileState extends State<EditProfile> {
                   );
                 },
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               TextField(
-                controller: bloodgroupText,
-                decoration: InputDecoration(
-                  hintText: "Your Blood Group",
-                  labelText: "Blood Group",
-                  border: OutlineInputBorder(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
                 ),
+                controller: dobText,
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: "Your Date of Birth",
+                  labelText: "Date of Birth",
+                  floatingLabelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.calendar_today),
+                ),
+                onTap: () async{
+                  DateTime? pickDate = await selectDate(context);
+                  if (pickDate != null) {
+                    setState(() {
+                      dobText.text = "${pickDate.day}/${pickDate.month}/${pickDate.year}";
+                    });
+                  }
+                },
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               TextField(
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
                 controller: emailText,
                 decoration: InputDecoration(
                   hintText: "Your Email",
                   labelText: "Email",
+                  floatingLabelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: saveChanges,
+                onPressed: () {saveChanges();},
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 10,horizontal: 30
-                  ),
+                  backgroundColor: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  minimumSize: Size(MediaQuery.of(context).size.width, 60)
                 ),
                 child: Text(
                   'Save Changes',
                   style: TextStyle(
-                      fontSize: 20),
+                      fontSize: 20,
+                  color: Colors.white),
                 ),
               ),
             ],
